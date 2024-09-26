@@ -1,15 +1,26 @@
 using Godot;
 using System;
+public enum State
+{
+	Cracked,
+	Healthy
+}
 
 public partial class Player : Area2D
 {
 	[Signal]
 	public delegate void HitEventHandler();
+	[Signal]
+	public delegate void GetHarderEventHandler();
 
 	[Export]
 	public int Speed { get; set; } = 400; // How fast the player will move (pixels/sec)
 
 	public Vector2 ScreenSize; // Size of the game window
+
+	public State PlayerState { get; set; } = State.Cracked;
+
+	private State CurrentState { get; set; }
 
     public override void _Ready()
     {
@@ -41,17 +52,7 @@ public partial class Player : Area2D
 			y: Mathf.Clamp(Position.Y, 0, ScreenSize.Y)
 		);
 
-		if (velocity.X != 0)
-		{
-			animatedSprite2D.Animation = "walk";
-			animatedSprite2D.FlipV = false;
-			animatedSprite2D.FlipH = velocity.X < 0;
-		}
-		else if (velocity.Y != 0)
-		{
-			animatedSprite2D.Animation = "up";
-			animatedSprite2D.FlipV = velocity.Y > 0;
-		}
+		UpdateAnimation(velocity, animatedSprite2D);
     }
 
 	public void Start(Vector2 position)
@@ -63,9 +64,49 @@ public partial class Player : Area2D
 
 	private void OnBodyEntered(Node2D body)
 	{
-		Hide(); // Player disappears after being hit
-		EmitSignal(SignalName.Hit);
-		GetNode<CollisionShape2D>("CollisionShape2D")
-			.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+		if (body.IsInGroup("milk"))
+		{
+			body.Hide();
+			EmitSignal(SignalName.GetHarder);
+		}
+		if (body.IsInGroup("mobs"))	EmitSignal(SignalName.Hit);
+	}
+
+	private void UpdateAnimation(Vector2 velocity, AnimatedSprite2D animatedSprite2D)
+	{
+		string walkAnimation;
+		switch (PlayerState)
+		{
+			case State.Healthy:
+				walkAnimation = "healthy_up";
+				break;
+			default:
+				walkAnimation = "cracked_up";
+				break;
+		}
+		
+		if (!string.IsNullOrEmpty(walkAnimation))
+		{
+			if (velocity.X != 0) animatedSprite2D.Animation = walkAnimation;
+			else if (velocity.Y != 0) animatedSprite2D.Animation = walkAnimation;
+		}
+	}
+
+	private void OnHit()
+	{
+		switch (PlayerState)
+		{
+			case State.Healthy:
+				PlayerState = State.Cracked;
+				break;
+
+			case State.Cracked:
+				Hide(); // Player disappears after being hit
+				EmitSignal(SignalName.Hit);
+				GetNode<CollisionShape2D>("CollisionShape2D")
+					.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+				break;
+		}
+		
 	}
 }

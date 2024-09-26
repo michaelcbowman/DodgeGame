@@ -1,10 +1,17 @@
-[gd_scene load_steps=9 format=4 uid="uid://b25fpsdridbfm"]
+[gd_scene load_steps=11 format=4 uid="uid://b25fpsdridbfm"]
 
 [ext_resource type="Script" path="res://Main.cs" id="1_w5s57"]
 [ext_resource type="PackedScene" uid="uid://daokkctp581fh" path="res://mob.tscn" id="2_q6h8k"]
 [ext_resource type="PackedScene" uid="uid://b6qrmpss1yp6c" path="res://player.tscn" id="3_lhley"]
+[ext_resource type="PackedScene" uid="uid://drm02l5h6nvpl" path="res://milk.tscn" id="3_xvkpb"]
 [ext_resource type="PackedScene" uid="uid://blaadvpts5snm" path="res://hud.tscn" id="4_mapcp"]
 [ext_resource type="AudioStream" uid="uid://dw5q26h8xbt6u" path="res://dodge_the_creeps_2d_assets/art/gameover.wav" id="5_tcyof"]
+
+[sub_resource type="Curve2D" id="Curve2D_avcd4"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 476, -1, 0, 0, 0, 0, 478, 715, 0, 0, 0, 0, 0, 717, 0, 0, 0, 0, 0, -1)
+}
+point_count = 5
 
 [sub_resource type="Curve2D" id="Curve2D_ql7vs"]
 _data = {
@@ -23,6 +30,7 @@ packet_sequence = SubResource("OggPacketSequence_s5l27")
 [node name="Main" type="Node"]
 script = ExtResource("1_w5s57")
 MobScene = ExtResource("2_q6h8k")
+MilkScene = ExtResource("3_xvkpb")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -34,8 +42,13 @@ color = Color(0.466667, 0.94902, 0.12549, 0.627451)
 
 [node name="Player" parent="." instance=ExtResource("3_lhley")]
 
+[node name="InvincibilityTimer" type="Timer" parent="."]
+
 [node name="MobTimer" type="Timer" parent="."]
 wait_time = 0.5
+
+[node name="PowerupTimer" type="Timer" parent="."]
+wait_time = 5.0
 
 [node name="ScoreTimer" type="Timer" parent="."]
 
@@ -46,6 +59,12 @@ autostart = true
 
 [node name="StartPosition" type="Marker2D" parent="."]
 position = Vector2(240, 450)
+
+[node name="MilkPath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_avcd4")
+
+[node name="MilkSpawnLocation" type="PathFollow2D" parent="MilkPath"]
+position = Vector2(0, -1)
 
 [node name="MobPath" type="Path2D" parent="."]
 curve = SubResource("Curve2D_ql7vs")
@@ -63,8 +82,11 @@ parameters/looping = false
 [node name="DeathSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_tcyof")
 
-[connection signal="Hit" from="Player" to="." method="GameOver"]
+[connection signal="GetHarder" from="Player" to="." method="GotMilk"]
+[connection signal="Hit" from="Player" to="." method="OnHit"]
+[connection signal="timeout" from="InvincibilityTimer" to="." method="OnInvincibilityTimerTimeout"]
 [connection signal="timeout" from="MobTimer" to="." method="OnMobTimerTimeout"]
+[connection signal="timeout" from="PowerupTimer" to="." method="OnPowerUpTimerTimeout"]
 [connection signal="timeout" from="ScoreTimer" to="." method="OnScoreTimerTimeout"]
 [connection signal="timeout" from="StartTimer" to="." method="OnStartTimerTimeout"]
 [connection signal="StartGame" from="HUD" to="." method="NewGame"]

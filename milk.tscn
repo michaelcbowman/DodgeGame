@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://drm02l5h6nvpl"]
+
+[ext_resource type="Texture2D" uid="uid://duwq0wbwmmqac" path="res://dodge_the_creeps_2d_assets/art/Breakfast Pixel Art/Milk.png" id="1_7xvxv"]
+[ext_resource type="Script" path="res://Milk.cs" id="1_htu2t"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_k04gy"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_7xvxv")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4bo2b"]
+size = Vector2(131, 160)
+
+[node name="Milk" type="RigidBody2D" groups=["milk"]]
+collision_mask = 0
+gravity_scale = 0.0
+script = ExtResource("1_htu2t")
+metadata/_edit_group_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, 0)
+scale = Vector2(3, 3.158)
+sprite_frames = SubResource("SpriteFrames_k04gy")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-11.5, 1)
+shape = SubResource("RectangleShape2D_4bo2b")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="OnVisibleOnScreenNotifier2DScreenExited"]

@@ -1,8 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://b6qrmpss1yp6c"]
+[gd_scene load_steps=8 format=3 uid="uid://b6qrmpss1yp6c"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_3co0i"]
 [ext_resource type="Texture2D" uid="uid://b6rb8pn6cbhkx" path="res://1.png" id="2_4idr8"]
 [ext_resource type="Texture2D" uid="uid://dr8pkxu0ut8r5" path="res://2.png" id="3_1fsvv"]
+[ext_resource type="Texture2D" uid="uid://bm2b1uy5ge1tj" path="res://Health_1.png" id="4_txfsf"]
+[ext_resource type="Texture2D" uid="uid://drf7v5diae7gl" path="res://Health_2.png" id="5_qa8jm"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_jm2rf"]
 animations = [{
@@ -14,24 +16,24 @@ animations = [{
 "texture": ExtResource("3_1fsvv")
 }],
 "loop": true,
-"name": &"up",
+"name": &"cracked_up",
 "speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_4idr8")
+"texture": ExtResource("4_txfsf")
 }, {
 "duration": 1.0,
-"texture": ExtResource("3_1fsvv")
+"texture": ExtResource("5_qa8jm")
 }],
 "loop": true,
-"name": &"walk",
+"name": &"healthy_up",
 "speed": 5.0
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gw716"]
 radius = 31.0
-height = 92.0
+height = 86.0
 
 [node name="Player" type="Area2D"]
 script = ExtResource("1_3co0i")
@@ -41,10 +43,10 @@ metadata/_edit_group_ = true
 position = Vector2(-2.6, 5.612)
 scale = Vector2(0.197656, 0.201609)
 sprite_frames = SubResource("SpriteFrames_jm2rf")
-animation = &"walk"
-frame_progress = 0.963722
+animation = &"cracked_up"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
 shape = SubResource("CapsuleShape2D_gw716")
 
 [connection signal="body_entered" from="." to="." method="OnBodyEntered"]
