@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://c8e7caiqt1lay"
+path="res://.godot/imported/ReDeath Edit 1 Export 2.wav-a4e6d355f940d4eacf3bb841a84ff00c.sample"
+
+[deps]
+
+source_file="res://dodge_the_creeps_2d_assets/art/ReDeath Edit 1 Export 2.wav"
+dest_files=["res://.godot/imported/ReDeath Edit 1 Export 2.wav-a4e6d355f940d4eacf3bb841a84ff00c.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0

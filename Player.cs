@@ -2,8 +2,9 @@ using Godot;
 using System;
 public enum State
 {
+	Healthy,
 	Cracked,
-	Healthy
+	ReDead
 }
 
 public partial class Player : Area2D
@@ -57,6 +58,7 @@ public partial class Player : Area2D
 
 	public void Start(Vector2 position)
 	{
+		PlayerState = State.Cracked;
 		Position = position;
 		Show();
 		GetNode<CollisionShape2D>("CollisionShape2D").Disabled = false;
@@ -90,23 +92,5 @@ public partial class Player : Area2D
 			if (velocity.X != 0) animatedSprite2D.Animation = walkAnimation;
 			else if (velocity.Y != 0) animatedSprite2D.Animation = walkAnimation;
 		}
-	}
-
-	private void OnHit()
-	{
-		switch (PlayerState)
-		{
-			case State.Healthy:
-				PlayerState = State.Cracked;
-				break;
-
-			case State.Cracked:
-				Hide(); // Player disappears after being hit
-				EmitSignal(SignalName.Hit);
-				GetNode<CollisionShape2D>("CollisionShape2D")
-					.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
-				break;
-		}
-		
 	}
 }

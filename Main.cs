@@ -63,10 +63,11 @@ public partial class Main : Node
 				GetNode<Timer>("InvincibilityTimer").Start();
 				break;
 			case State.Cracked:
+				_player.PlayerState = State.ReDead;
 				_player.Hide(); // Player disappears after being hit
 				GameOver();
-				_player.GetNode<CollisionShape2D>("CollisionShape2D")
-					.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+				break;
+			case State.ReDead:
 				break;
 		}
 	}
